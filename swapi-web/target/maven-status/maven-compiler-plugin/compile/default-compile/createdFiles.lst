@@ -1,4 +1,7 @@
 com/luan/swapi/controllers/FirstController.class
 com/luan/swapi/dao/SwapiDao.class
-com/luan/swapi/Application.class
+com/luan/swapi/pojo/Films.class
 com/luan/swapi/controllers/SwapiController.class
+com/luan/swapi/pojo/Species.class
+com/luan/swapi/Application.class
+com/luan/swapi/pojo/Characters.class

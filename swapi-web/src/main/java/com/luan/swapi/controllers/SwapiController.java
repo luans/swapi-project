@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
 @RestController
 @RequestMapping(path = "/api")
 public class SwapiController {
@@ -18,13 +16,10 @@ public class SwapiController {
     
     @GetMapping(path = "/jdtest")
     public String jdTest(
-        @RequestParam(name = "filmId", required=true) String filmId,
-        @RequestParam(name = "characterId", required=true) String characterId) {
+        @RequestParam(name = "filmId", required=false) String filmId,
+        @RequestParam(name = "characterId", required=false) String characterId) {
 
-        swapiDao.getTest();
-
-        return "filmId: " + filmId + " - characterId: " + characterId;
-
+        String test = swapiDao.jdTest(filmId, characterId);
+        return test;
     }
-
 }
