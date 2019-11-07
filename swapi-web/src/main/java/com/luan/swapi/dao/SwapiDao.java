@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 public class SwapiDao {
 
     private final String url = "https://swapi.co/";
+    private static String DROID_TYPE = "https://swapi.co/api/species/2/";
 
     public String jdTest(String filmId, String characterId) {
 
@@ -27,7 +28,7 @@ public class SwapiDao {
         if (filmId == null || characterId == null) {
             return "You must to inform: filmId and characterId.";
         }
-        
+
         // Load the films.
         JSONObject resp = restRequest(url + "/api/films/" + filmId);
         Films films = gson.fromJson(resp.toString(), Films.class);
@@ -35,25 +36,43 @@ public class SwapiDao {
         // Separate the Persons from the loaded film.
         List<String> characteresFromFilm = films.getCharacters();
 
-        // Get Character.
-        JSONObject characterResp = restRequest(url + "/api/people/" + characterId);
-        Characters character = gson.fromJson(characterResp.toString(), Characters.class);
-
-        String specie = character.getSpecies().get(0);
+        // Final list
         List<String> resultChars = new ArrayList<String>();
+        
+        if (filmId.equals("1")) {
+            // Return only Droids from the film
+            for (String c : characteresFromFilm) {
+                // Check if the person is a droid and add to additional list
+                JSONObject droid = restRequest(c);
+                Characters droidObject = gson.fromJson(droid.toString(), Characters.class);
 
-        for (String c : characteresFromFilm) {
-
-            // Load specie from string c.
-            JSONObject ch = restRequest(c);
-            Characters cObject = gson.fromJson(ch.toString(), Characters.class);
-
-            if (cObject.getSpecies().get(0).equals(specie)) {
-                // add on the new JSON list
-                resultChars.add(cObject.getName());
+                if (droidObject.getSpecies().get(0).equals(DROID_TYPE)) {
+                    System.out.println(droidObject.toString());
+                    resultChars.add(droidObject.getName());
+                }
             }
         }
-        
+
+        else {
+            // Get Character.
+            JSONObject characterResp = restRequest(url + "/api/people/" + characterId);
+            Characters character = gson.fromJson(characterResp.toString(), Characters.class);
+
+            String specie = character.getSpecies().get(0);
+
+            for (String c : characteresFromFilm) {
+
+                // Load specie from string c.
+                JSONObject ch = restRequest(c);
+                Characters cObject = gson.fromJson(ch.toString(), Characters.class);
+
+                if (cObject.getSpecies().get(0).equals(specie)) {
+                    // add on the new JSON list
+                    resultChars.add(cObject.getName());
+                }
+            }
+        }
+
         return resultChars.toString();
     }
 
